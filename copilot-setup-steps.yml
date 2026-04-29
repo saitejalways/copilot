@@ -1,0 +1,27 @@
+name: "Copilot setup steps"
+
+on:
+  workflow_dispatch:
+
+jobs:
+  copilot-setup-steps:
+    runs-on: aca-dind-large
+    services:
+      mongo:
+        image: 454115844779.dkr.ecr.us-east-1.amazonaws.com/mongo/server:4.0.253
+        ports: [ "27017:27017" ]
+      postgres:
+        image: 454115844779.dkr.ecr.us-east-1.amazonaws.com/postgres/server:17.5.172
+        ports: [ "5432:5432" ]
+        env:
+          POSTGRES_PASSWORD: sa_password!123456
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: aca-group/github-actions/dotnet/setup@v1
+        with:
+          global_json_path: ./global.json
+      - uses: aca-group/github-actions/node/setup-and-ci@v1
